@@ -44,8 +44,8 @@ def generate_launch_description():
         ),
 
         Node(
-            package='gscam2',
-            executable='gscam_main',
+            package='gscam',
+            executable='gscam_node',
             parameters=[
                 {'preroll': True},
                 {'camera_name': 'camera'},
