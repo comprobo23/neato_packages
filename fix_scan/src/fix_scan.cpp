@@ -65,7 +65,7 @@ class FixScan : public rclcpp::Node {
 	for (int t_offset_msecs = 200; t_offset_msecs <= 400; t_offset_msecs += 10) {
 	    float match_val = 0.0;
 	    sensor_msgs::msg::PointCloud2 cloud;
-	    scan_mod.header.stamp = rclcpp::Time(scan_in->header.stamp) - rclcpp::Duration(t_offset_msecs*1000000);
+	    scan_mod.header.stamp = rclcpp::Time(scan_in->header.stamp) - rclcpp::Duration::from_seconds(t_offset_msecs/1000.0);
 	    try {
 		projector_->transformLaserScanToPointCloud("odom",
 							   scan_mod,
@@ -107,7 +107,7 @@ class FixScan : public rclcpp::Node {
 	if (best_matching_offset < 0) {
 	    best_matching_offset = 0;
 	}
-	scan_mod.header.stamp = rclcpp::Time(scan_in->header.stamp) - rclcpp::Duration(best_matching_offset*1000000);
+	scan_mod.header.stamp = rclcpp::Time(scan_in->header.stamp) - rclcpp::Duration::from_seconds(best_matching_offset/1000.0);
 	pub->publish(scan_mod);
 	try {
 	    sensor_msgs::msg::PointCloud2 final_cloud;
@@ -116,7 +116,7 @@ class FixScan : public rclcpp::Node {
 			    final_cloud,
 			    *tf_buffer_);
 	    // the cloud time is 200ms ahead of the laser scan time to mimic the idea of instantaneously grabbing these points
-	    final_cloud.header.stamp = rclcpp::Time(final_cloud.header.stamp) + rclcpp::Duration(200000000);
+	    final_cloud.header.stamp = rclcpp::Time(final_cloud.header.stamp) + rclcpp::Duration::from_seconds(0.2);
 	    pub_cloud->publish(final_cloud);
 	    delete prev_cloud;
 	    prev_cloud = new sensor_msgs::msg::PointCloud2(final_cloud);
