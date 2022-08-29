@@ -16,7 +16,7 @@
   <link name="base_link">
     <visual>
       <geometry>
-        <mesh filename="package://neato_node2/main_body.stl" scale="0.001 0.001 0.001"/>
+	      <mesh filename="package://neato2_interfaces/models/neato/meshes/main_body.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <material name="dark_grey"/>
@@ -48,7 +48,7 @@
   <link name="wheel_left_link">
     <visual>
       <geometry>
-        <mesh filename="package://neato_node2/wheel.dae"/>
+	<mesh filename="package://neato2_interfaces/models/neato/meshes/wheel.dae"/>
       </geometry>
       <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
     </visual>
@@ -73,7 +73,7 @@
   <link name="wheel_right_link">
     <visual>
       <geometry>
-        <mesh filename="package://neato_node2/wheel.dae"/>
+	<mesh filename="package://neato2_interfaces/models/neato/meshes/wheel.dae"/>
       </geometry>
       <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
     </visual>
@@ -226,13 +226,6 @@
         <box size="0.05 0.05 0.05"/>
       </geometry>
     </collision>
-    <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <geometry>
-        <box size="0.05 0.05 0.05"/>
-      </geometry>
-      <material name="red"/>
-    </visual>
     <inertial>
       <mass value="1e-5"/>
       <origin rpy="0 0 0" xyz="0 0 0"/>
