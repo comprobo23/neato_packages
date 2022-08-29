@@ -31,7 +31,6 @@ def generate_launch_description():
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([interfaces_launch_file_dir, '/robot_state_publisher.py']),
-            launch_arguments={'use_sim_time': False}.items(),
         ),
 
         Node(
