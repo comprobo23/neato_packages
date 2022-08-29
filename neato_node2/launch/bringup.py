@@ -2,6 +2,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch_ros.actions import Node
 from launch.substitutions import LaunchConfiguration
+import os
 
 def generate_launch_description():
     use_udp = DeclareLaunchArgument('use_udp', default_value="true")
