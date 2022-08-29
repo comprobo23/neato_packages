@@ -11,6 +11,7 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['meshes/main_body.stl']),
         ('share/' + package_name, ['urdf/neato.urdf']),
+        ('share/' + package_name, ['launch/robot_state_publisher.py']),
         ('share/' + package_name, ['launch/bringup_minimal.py']),
         ('share/' + package_name, ['launch/bringup.py']),
         ('share/' + package_name, ['package.xml']),
