@@ -6,6 +6,7 @@ from launch.substitutions import LaunchConfiguration
 def generate_launch_description():
     use_udp = DeclareLaunchArgument('use_udp', default_value="true")
     host = DeclareLaunchArgument('host', default_value="")
+    interfaces_launch_file_dir = os.path.join(get_package_share_directory('neato2_interfaces'), 'launch')
 
     return LaunchDescription([
         use_udp,
@@ -22,6 +23,11 @@ def generate_launch_description():
             package='fix_scan',
             executable='fix_scan',
             name='fix_scan'
+        ),
+
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([interfaces_launch_file_dir, '/robot_state_publisher.py']),
+            launch_arguments={'use_sim_time': False}.items(),
         ),
 
         Node(

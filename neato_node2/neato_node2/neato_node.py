@@ -65,7 +65,7 @@ class NeatoNode(Node):
         self.scan = scan
         self.odom = Odometry()
         self.odom.header.frame_id = 'odom'
-        self.odom.child_frame_id = 'base_link'
+        self.odom.child_frame_id = 'base_footprint'
         time.sleep(4.0)
         # do UDP hole punching to make sure the sensor data from the robot makes it through
         self.robot.do_udp_hole_punch()
@@ -155,7 +155,7 @@ class NeatoNode(Node):
                 transform = TransformStamped()
                 transform.header.stamp = curr_motor_time.to_msg()
                 transform.header.frame_id = 'odom'
-                transform.child_frame_id = 'base_link'
+                transform.child_frame_id = 'base_footprint'
                 transform.transform.translation.x = self.x
                 transform.transform.translation.y = self.y
                 transform.transform.rotation.x = quaternion.x
