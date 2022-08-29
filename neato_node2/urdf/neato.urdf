@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<robot name="neato_standalone">
+  <material name="dark_grey">
+    <color rgba="0.3 0.3 0.3 1"/>
+  </material>
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://neato_node2/main_body.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <material name="dark_grey"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.06" radius="0.15"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.01 0 0.03"/>
+    </collision>
+    <collision>
+      <geometry>
+        <box size="0.16 0.3 0.06"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0.08 0 0.03"/>
+    </collision>
+    <inertial>
+      <origin xyz="0.01 0 0"/>
+      <mass value="2.4"/>
+      <inertia ixx="0.019995" ixy="0.0" ixz="0.0" iyy="0.019995" iyz="0.0" izz="0.03675"/>
+    </inertial>
+  </link>
+</robot>
