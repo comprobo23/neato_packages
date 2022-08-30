@@ -166,6 +166,28 @@ class NeatoNode(Node):
                 self.odomBroadcaster.sendTransform(transform)
                 self.odomPub.publish(self.odom)
 
+                transform = TransformStamped()
+                transform.header.stamp = curr_motor_time.to_msg()
+                transform.header.frame_id = 'base_footprint'
+                transform.child_frame_id = 'wheel_right_link'
+                transform.transform.translation.y = BASE_WIDTH/1000.0/2
+                transform.transform.translation.z = 0.025
+                right_th = 0      # calculate this from wheel travel
+                transform.transform.rotation.y = sin(right_th/2.0)
+                transform.transform.rotation.w = cos(right_th/2.0)
+                self.odomBroadcaster.sendTransform(transform)
+
+                transform = TransformStamped()
+                transform.header.stamp = curr_motor_time.to_msg()
+                transform.header.frame_id = 'base_footprint'
+                transform.child_frame_id = 'wheel_left_link'
+                transform.transform.translation.y = -BASE_WIDTH/1000.0/2
+                transform.transform.translation.z = 0.025
+                left_th = 0.0      # calculate this from wheel travel
+                transform.transform.rotation.y = sin(left_th/2.0)
+                transform.transform.rotation.w = cos(left_th/2.0)
+                self.odomBroadcaster.sendTransform(transform)
+
         except Exception as err:
             print("my error is " + str(err))
         with self.cmd_vel_lock:
