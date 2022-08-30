@@ -171,12 +171,9 @@
       <velocity_decay/>
       <velocity_decay/>
       <sensor name='bumpers' type='contact'>
-        <always_on>1</always_on>
         <update_rate>10</update_rate>
-        <visualize>1</visualize>
         <contact>
           <collision>base_footprint_fixed_joint_lump__base_link_collision_1</collision>
-          <topic>__default_topic__</topic>
         </contact>
         <plugin name='gazebo_ros_bumper_controller' filename='libgazebo_ros_bumper.so'>
           <ros>
@@ -184,7 +181,6 @@
           </ros>
           <frame_name>world</frame_name>
         </plugin>
-        <pose frame=''>0 0 0 0 -0 0</pose>
       </sensor>
       <velocity_decay/>
       <sensor name='camera' type='camera'>
