@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 import threading
-from .neato_driver.neato_hybrid_driver import xv11, BASE_WIDTH, MAX_SPEED
+from .neato_driver.neato_hybrid_driver import xv11, BASE_WIDTH, MAX_SPEED, WHEEL_DIAMETER
 from geometry_msgs.msg import Twist, Quaternion, TransformStamped
 from sensor_msgs.msg import LaserScan
 from nav_msgs.msg import Odometry
@@ -172,7 +172,7 @@ class NeatoNode(Node):
                 transform.child_frame_id = 'wheel_right_link'
                 transform.transform.translation.y = BASE_WIDTH/1000.0/2
                 transform.transform.translation.z = 0.025
-                right_th = 0      # calculate this from wheel travel
+                right_th = (right/1000.00)/(WHEEL_DIAMETER/2000.0)
                 transform.transform.rotation.y = sin(right_th/2.0)
                 transform.transform.rotation.w = cos(right_th/2.0)
                 self.odomBroadcaster.sendTransform(transform)
@@ -183,7 +183,7 @@ class NeatoNode(Node):
                 transform.child_frame_id = 'wheel_left_link'
                 transform.transform.translation.y = -BASE_WIDTH/1000.0/2
                 transform.transform.translation.z = 0.025
-                left_th = 0.0      # calculate this from wheel travel
+                left_th = (left/1000.00)/(WHEEL_DIAMETER/2000.0)
                 transform.transform.rotation.y = sin(left_th/2.0)
                 transform.transform.rotation.w = cos(left_th/2.0)
                 self.odomBroadcaster.sendTransform(transform)

@@ -44,6 +44,7 @@ import struct
 from os import system
 
 
+WHEEL_DIAMETER = 70    # millimeters
 BASE_WIDTH = 248    # millimeters
 MAX_SPEED = 300     # millimeters/second
 
