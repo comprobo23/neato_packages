@@ -39,11 +39,6 @@ set(msg_files
 )
 
 
-install(DIRECTORY launch models worlds urdf
-  DESTINATION share/${PROJECT_NAME}/
-)
-
-
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${msg_files}
 )

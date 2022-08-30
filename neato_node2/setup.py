@@ -22,6 +22,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'simulator_adapter = neato_node2.simulator_adapter:main',
             'neato_node = neato_node2.neato_node:main',
             'setup_udp_stream = neato_node2.setup_udp_stream:main'
         ],
