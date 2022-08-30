@@ -170,7 +170,7 @@ class NeatoNode(Node):
                 transform.header.stamp = curr_motor_time.to_msg()
                 transform.header.frame_id = 'base_footprint'
                 transform.child_frame_id = 'wheel_right_link'
-                transform.transform.translation.y = BASE_WIDTH/1000.0/2
+                transform.transform.translation.y = -BASE_WIDTH/1000.0/2
                 transform.transform.translation.z = 0.025
                 right_th = (right/1000.00)/(WHEEL_DIAMETER/2000.0)
                 transform.transform.rotation.y = sin(right_th/2.0)
@@ -181,7 +181,7 @@ class NeatoNode(Node):
                 transform.header.stamp = curr_motor_time.to_msg()
                 transform.header.frame_id = 'base_footprint'
                 transform.child_frame_id = 'wheel_left_link'
-                transform.transform.translation.y = -BASE_WIDTH/1000.0/2
+                transform.transform.translation.y = BASE_WIDTH/1000.0/2
                 transform.transform.translation.z = 0.025
                 left_th = (left/1000.00)/(WHEEL_DIAMETER/2000.0)
                 transform.transform.rotation.y = sin(left_th/2.0)
