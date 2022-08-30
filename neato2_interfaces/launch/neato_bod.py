@@ -47,6 +47,10 @@ def generate_launch_description():
             package='neato_node2',
             executable='simulator_adapter'),
 
+        Node(
+            package='fix_scan',
+            executable='scan_to_pc2'),
+
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 os.path.join(pkg_gazebo_ros, 'launch', 'gzclient.launch.py')

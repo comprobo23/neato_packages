@@ -36,7 +36,20 @@ ament_target_dependencies(
   "sensor_msgs"
 )
 
-install(TARGETS fix_scan
+add_executable(scan_to_pc2 src/scan_to_pc2.cpp)
+target_include_directories(scan_to_pc2 PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+ament_target_dependencies(
+  scan_to_pc2
+  "laser_geometry"
+  "rclcpp"
+  "tf2"
+  "tf2_ros"
+  "sensor_msgs"
+)
+
+install(TARGETS fix_scan scan_to_pc2
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
