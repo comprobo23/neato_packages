@@ -29,6 +29,7 @@ def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='True')
     world_file_name = 'empty.world'
     world = os.path.join(get_package_share_directory('neato2_interfaces'),
+                         'worlds',
                           world_file_name)
     launch_file_dir = os.path.join(get_package_share_directory('neato2_interfaces'), 'launch')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
