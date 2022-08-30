@@ -48,10 +48,6 @@ def generate_launch_description():
             ),
         ),
 
-        ExecuteProcess(
-            cmd=['ros2', 'param', 'set', '/gazebo', 'use_sim_time', use_sim_time],
-            output='screen'),
-
         Node(
             package='neato_node2',
             executable='simulator_adapter'),

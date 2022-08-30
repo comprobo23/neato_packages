@@ -57,10 +57,6 @@ def generate_launch_description():
             package='fix_scan',
             executable='scan_to_pc2'),
 
-        ExecuteProcess(
-            cmd=['ros2', 'param', 'set', '/gazebo', 'use_sim_time', use_sim_time],
-            output='screen'),
-
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([launch_file_dir, '/robot_state_publisher.py']),
             launch_arguments={'use_sim_time': use_sim_time}.items(),
