@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(neato2_interfaces)
+project(neato2_gazebo)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -17,10 +17,11 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(neato2_interfaces REQUIRED)
+find_package(gazebo_ros REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -33,16 +34,8 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-set(msg_files
-  "msg/Accel.msg"
-  "msg/Bump.msg"
+install(DIRECTORY launch models worlds urdf
+  DESTINATION share/${PROJECT_NAME}/
 )
-
-
-rosidl_generate_interfaces(${PROJECT_NAME}
-  ${msg_files}
-)
-
-ament_export_dependencies(rosidl_default_runtime)
 
 ament_package()

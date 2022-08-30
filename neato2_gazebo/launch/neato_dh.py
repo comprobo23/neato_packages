@@ -28,11 +28,11 @@ from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='True')
-    world_file_name = 'flatland.world'
-    world = os.path.join(get_package_share_directory('neato2_interfaces'),
+    world_file_name = 'dh.world'
+    world = os.path.join(get_package_share_directory('neato2_gazebo'),
                          'worlds',
                           world_file_name)
-    launch_file_dir = os.path.join(get_package_share_directory('neato2_interfaces'), 'launch')
+    launch_file_dir = os.path.join(get_package_share_directory('neato2_gazebo'), 'launch')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
     return LaunchDescription([

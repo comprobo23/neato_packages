@@ -14,7 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Authors: Darby Lim 
+# Authors: Darby Lim
+
 import os
 
 from launch_ros.actions import Node
@@ -27,11 +28,11 @@ from launch.substitutions import LaunchConfiguration
 
 def generate_launch_description():
     use_sim_time = LaunchConfiguration('use_sim_time', default='True')
-    world_file_name = 'empty.world'
-    world = os.path.join(get_package_share_directory('neato2_interfaces'),
+    world_file_name = 'maze.world'
+    world = os.path.join(get_package_share_directory('neato2_gazebo'),
                          'worlds',
                           world_file_name)
-    launch_file_dir = os.path.join(get_package_share_directory('neato2_interfaces'), 'launch')
+    launch_file_dir = os.path.join(get_package_share_directory('neato2_gazebo'), 'launch')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
 
     return LaunchDescription([
@@ -48,10 +49,6 @@ def generate_launch_description():
             ),
         ),
 
-        ExecuteProcess(
-            cmd=['ros2', 'param', 'set', '/gazebo', 'use_sim_time', use_sim_time],
-            output='screen'),
-
         Node(
             package='neato_node2',
             executable='simulator_adapter'),
@@ -59,6 +56,10 @@ def generate_launch_description():
         Node(
             package='fix_scan',
             executable='scan_to_pc2'),
+
+        ExecuteProcess(
+            cmd=['ros2', 'param', 'set', '/gazebo', 'use_sim_time', use_sim_time],
+            output='screen'),
 
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([launch_file_dir, '/robot_state_publisher.py']),
