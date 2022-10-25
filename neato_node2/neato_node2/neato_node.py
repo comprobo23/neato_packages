@@ -17,21 +17,23 @@ class NeatoNode(Node):
         super().__init__("neato_node")
 
 
-        (use_udp, host) = self.declare_parameters(
+        (use_udp, host, robot_name) = self.declare_parameters(
             namespace='',
             parameters=[
                 ('use_udp', True),
                 ('host', ""),
+                ('robot_name',"")
             ]
         )
         self.get_logger().info("Connecting to host: %s"%(host.value))
+        self.get_logger().info("Namespace is set to: %s" %(robot_name.value))
         self.robot = xv11(host.value, use_udp.value)
         self.subscription = self.create_subscription(
             Twist,
             'cmd_vel',
             self.cmdVelCb,
             10)
-
+        self.tf_prefix = robot_name.value
         self.scanPub = self.create_publisher(LaserScan, 'scan', 10)
         self.odomPub = self.create_publisher(Odometry, 'odom', 10)
         self.bumpPub = self.create_publisher(Bump, 'bump', 10)
@@ -55,7 +57,7 @@ class NeatoNode(Node):
         # TODO: get this using rosparam
         self.scan_link = 'base_laser_link'
         scan = LaserScan()
-        scan.header.frame_id = self.scan_link 
+        scan.header.frame_id = self.tf_prefix + self.scan_link
         scan.angle_min = -pi
         scan.angle_max = pi
         scan.angle_increment = pi/180.0
@@ -64,8 +66,8 @@ class NeatoNode(Node):
         scan.time_increment = 1.0/(5*360)
         self.scan = scan
         self.odom = Odometry()
-        self.odom.header.frame_id = 'odom'
-        self.odom.child_frame_id = 'base_footprint'
+        self.odom.header.frame_id = self.tf_prefix + 'odom'
+        self.odom.child_frame_id = self.tf_prefix + 'base_footprint'
         time.sleep(4.0)
         # do UDP hole punching to make sure the sensor data from the robot makes it through
         self.robot.do_udp_hole_punch()
@@ -154,8 +156,8 @@ class NeatoNode(Node):
                 self.odom.twist.twist.angular.z = dth/dt
                 transform = TransformStamped()
                 transform.header.stamp = curr_motor_time.to_msg()
-                transform.header.frame_id = 'odom'
-                transform.child_frame_id = 'base_footprint'
+                transform.header.frame_id = self.tf_prefix + 'odom'
+                transform.child_frame_id = self.tf_prefix + 'base_footprint'
                 transform.transform.translation.x = self.x
                 transform.transform.translation.y = self.y
                 transform.transform.rotation.x = quaternion.x
@@ -168,8 +170,8 @@ class NeatoNode(Node):
 
                 transform = TransformStamped()
                 transform.header.stamp = curr_motor_time.to_msg()
-                transform.header.frame_id = 'base_footprint'
-                transform.child_frame_id = 'wheel_right_link'
+                transform.header.frame_id = self.tf_prefix + 'base_footprint'
+                transform.child_frame_id = self.tf_prefix + 'wheel_right_link'
                 transform.transform.translation.y = -BASE_WIDTH/1000.0/2
                 transform.transform.translation.z = 0.025
                 right_th = (right/1000.00)/(WHEEL_DIAMETER/2000.0)
@@ -179,8 +181,8 @@ class NeatoNode(Node):
 
                 transform = TransformStamped()
                 transform.header.stamp = curr_motor_time.to_msg()
-                transform.header.frame_id = 'base_footprint'
-                transform.child_frame_id = 'wheel_left_link'
+                transform.header.frame_id = self.tf_prefix + 'base_footprint'
+                transform.child_frame_id = self.tf_prefix + 'wheel_left_link'
                 transform.transform.translation.y = BASE_WIDTH/1000.0/2
                 transform.transform.translation.z = 0.025
                 left_th = (left/1000.00)/(WHEEL_DIAMETER/2000.0)
