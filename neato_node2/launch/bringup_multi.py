@@ -1,7 +1,7 @@
 """
 Sample invocation:
 
-ros2 launch neato_node2 bringup_multi.py host:=192.168.16.59 robot_name:=a udp_video_port:=5002 gscam_config:='udpsrc port=5002 ! application/x-rtp, payload=96 ! rtpjitterbuffer ! rtph264depay ! avdec_h264  ! videoconvert'
+ros2 launch neato_node2 bringup_multi.py host:=192.168.16.59 robot_name:=a udp_video_port:=5002 udp_sensor_port:=7777 gscam_config:='udpsrc port=5002 ! application/x-rtp, payload=96 ! rtpjitterbuffer ! rtph264depay ! avdec_h264  ! videoconvert'
 """
 
 from ament_index_python.packages import get_package_share_directory
@@ -18,6 +18,7 @@ def generate_launch_description():
     host = DeclareLaunchArgument('host', default_value="")
     gscam_config = DeclareLaunchArgument('gscam_config', default_value='udpsrc port=5002 ! application/x-rtp, payload=96 ! rtpjitterbuffer ! rtph264depay ! avdec_h264  ! videoconvert')
     udp_video_port = DeclareLaunchArgument('udp_video_port', default_value="5002")
+    udp_sensor_port = DeclareLaunchArgument('udp_sensor_port', default_value="7777")
     robot_name = LaunchConfiguration('robot_name')
     robot_name_command = DeclareLaunchArgument('robot_name', default_value='')
     interfaces_launch_file_dir = os.path.join(get_package_share_directory('neato2_gazebo'), 'launch')
@@ -34,6 +35,7 @@ def generate_launch_description():
                 executable='neato_node',
                 name='neato_driver',
                 parameters=[{"use_udp": LaunchConfiguration('use_udp')},
+                            {"udp_port": LaunchConfiguration('udp_sensor_port')},
                             {"robot_name": robot_name},
                             {"host": LaunchConfiguration('host')}],
                 output='screen'
