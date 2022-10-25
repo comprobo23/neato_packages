@@ -21,6 +21,10 @@ class FixScan : public rclcpp::Node {
  public:
    FixScan() : Node("fix_scan")
    {
+	 this->declare_parameter("robot_name", "");
+     rclcpp::Parameter robot_name_param = this->get_parameter("robot_name");
+	 robot_name = robot_name_param.as_string();
+	 std::cout << "robot_name " << robot_name << std::endl;
      projector_ = new laser_geometry::LaserProjection();
      prev_cloud = 0;
      pub = this->create_publisher<sensor_msgs::msg::LaserScan>("stable_scan", 10);
@@ -39,6 +43,7 @@ class FixScan : public rclcpp::Node {
     rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr pub;
     rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pub_cloud;
     sensor_msgs::msg::PointCloud2* prev_cloud;
+	std::string robot_name;
     rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr sub;
     std::shared_ptr<tf2_ros::TransformListener> listener_{nullptr};
     std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
@@ -54,7 +59,7 @@ class FixScan : public rclcpp::Node {
 	std::string errorstr;
 	if (!tf_buffer_->canTransform(
 				scan_in->header.frame_id,
-				"odom",
+				robot_name + "odom",
 				tf2_ros::fromMsg(scan_in->header.stamp),
 				tf2::durationFromSec(1.0))) {
 		std::cout << "unable to transform" << std::endl;
@@ -67,7 +72,7 @@ class FixScan : public rclcpp::Node {
 	    sensor_msgs::msg::PointCloud2 cloud;
 	    scan_mod.header.stamp = rclcpp::Time(scan_in->header.stamp) - rclcpp::Duration::from_seconds(t_offset_msecs/1000.0);
 	    try {
-		projector_->transformLaserScanToPointCloud("odom",
+		projector_->transformLaserScanToPointCloud(robot_name + "odom",
 							   scan_mod,
 							   cloud,
 							   *tf_buffer_);
@@ -100,7 +105,7 @@ class FixScan : public rclcpp::Node {
 		    best_matching_offset = t_offset_msecs;
 		}
 	    } catch (...) {
-		std::cout << "exception!!!" << std::endl;
+			std::cout << "exception!!!" << std::endl;
 	    }
 	}
 	// set this based on the best matching offset
@@ -111,7 +116,7 @@ class FixScan : public rclcpp::Node {
 	pub->publish(scan_mod);
 	try {
 	    sensor_msgs::msg::PointCloud2 final_cloud;
-	    projector_->transformLaserScanToPointCloud("odom",
+	    projector_->transformLaserScanToPointCloud(robot_name + "odom",
 			    scan_mod,
 			    final_cloud,
 			    *tf_buffer_);

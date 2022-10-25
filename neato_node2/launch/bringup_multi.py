@@ -26,14 +26,14 @@ def generate_launch_description():
                 parameters=[{"use_udp": LaunchConfiguration('use_udp')},
                             {"robot_name": robot_name},
                             {"host": LaunchConfiguration('host')}],
-                             output='screen'
+                output='screen'
            ),
-           #Node(
-          #      package='fix_scan',
-          #      executable='fix_scan',
-          #      name='fix_scan'
-           # ),
-            # TODO: this does not work correctly
+           Node(
+                package='fix_scan',
+                executable='fix_scan',
+                name='fix_scan',
+                parameters=[{"robot_name": robot_name}]
+            ),
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([interfaces_launch_file_dir, '/robot_state_publisher.py']),
                 launch_arguments={'tf_prefix': robot_name}.items()
