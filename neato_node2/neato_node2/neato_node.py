@@ -17,17 +17,19 @@ class NeatoNode(Node):
         super().__init__("neato_node")
 
 
-        (use_udp, host, robot_name) = self.declare_parameters(
+        (use_udp, udp_port, host, robot_name) = self.declare_parameters(
             namespace='',
             parameters=[
                 ('use_udp', True),
+                ('udp_port', 7777),
                 ('host', ""),
                 ('robot_name',"")
             ]
         )
         self.get_logger().info("Connecting to host: %s"%(host.value))
         self.get_logger().info("Namespace is set to: %s" %(robot_name.value))
-        self.robot = xv11(host.value, use_udp.value)
+        self.get_logger().info("UDP port is set to: %s" %(udp_port.value))
+        self.robot = xv11(host.value, use_udp.value, udp_port.value)
         self.subscription = self.create_subscription(
             Twist,
             'cmd_vel',

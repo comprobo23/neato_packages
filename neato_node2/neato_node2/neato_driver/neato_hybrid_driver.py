@@ -140,8 +140,9 @@ xv11_charger_info = [ "FuelPercent",
 
 class xv11():
 
-    def __init__(self, port, use_udp=True):
+    def __init__(self, port, use_udp=True, udp_port=7777):
         self.use_udp = use_udp
+        self.udp_port = udp_port
         self.host = port
         self.port = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.port.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
@@ -163,11 +164,10 @@ class xv11():
             time.sleep(1)
 
         UDP_IP = "0.0.0.0"
-        UDP_PORT = 7777
 
         if self.use_udp:
             self.sensor_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
-            self.sensor_sock.bind((UDP_IP, UDP_PORT))
+            self.sensor_sock.bind((UDP_IP, self.udp_port))
             self.sensor_sock.settimeout(.02)
         print("CONNECTED!")
 
@@ -188,7 +188,7 @@ class xv11():
         """ This should be called once the Raspberry pi is forwarding sensor packets
             in order to allow UDP traffic to be forwarded from the Olin network or
             the ethernet to the OLIN-ROBOTICS network """
-        system('hping3 -c 1 -2 -s 7777 -p 7777 ' + self.host)
+        system('hping3 -c 1 -2 -s ' + str(self.udp_port) + ' -p 7777 ' + self.host)
 
     def exit(self):
         self.setLDS("off")
