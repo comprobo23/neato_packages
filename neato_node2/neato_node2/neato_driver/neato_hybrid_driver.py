@@ -39,7 +39,7 @@ __author__ = "ferguson@cs.albany.edu (Michael Ferguson)"
 import socket
 import time
 import select
-import _pickle as pickle
+import pickle
 import struct
 from os import system
 
@@ -169,7 +169,6 @@ class xv11():
             self.sensor_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
             self.sensor_sock.bind((UDP_IP, self.udp_port))
             self.sensor_sock.settimeout(.02)
-        print("CONNECTED!")
 
         #self.port.settimeout(10)
         self.last_cmd = None
@@ -201,19 +200,17 @@ class xv11():
 
     def setTestMode(self, value):
         """ Turn test mode on/off. """
-
         self.port.send(("testmode " + value + '\n').encode())
         print("SETTING TEST MODE TO",value)
 
     def send_protocol_preference(self):
         """ Tell the server whether or not to use UDP for sensor packets """
 
-        self.port.send(("protocolpreference " + str(self.use_udp) + ' ' + str(self.udp_port) + '\n').encode())
+        self.port.send(("protocolpreference " + str(self.use_udp) + '\n').encode())
         print("SETTING PROTOCOL to udp", self.use_udp)
 
     def send_keep_alive(self):
         """ Tell the server that we are still alive... basically a noop packet """ 
-
         self.port.send("keepalive\n".encode())
 
 
@@ -228,9 +225,9 @@ class xv11():
         try:
             if self.use_udp:
                 sensor_packet, _ = self.sensor_sock.recvfrom(65536)
-                self.sensor_dict = pickle.loads(sensor_packet,encoding='bytes')
+                self.sensor_dict = pickle.loads(sensor_packet)
             else:
-                self.sensor_dict = pickle.load(self.port_file,encoding='bytes')
+                self.sensor_dict = pickle.load(self.port_file)
         except socket.timeout:
             self.sensor_dict = {}
 
@@ -238,9 +235,9 @@ class xv11():
         """ Read values of a scan -- call requestScan first! """
         ranges = list()
         intensities = list()
-        if b'ldsscanranges' not in self.sensor_dict:
+        if 'ldsscanranges' not in self.sensor_dict:
             return ([],[])
-        ranges = struct.unpack('<%sH' % self.sensor_dict[b'ldsscanranges'][0], self.sensor_dict[b'ldsscanranges'][1])
+        ranges = struct.unpack('<%sH' % self.sensor_dict['ldsscanranges'][0], self.sensor_dict['ldsscanranges'][1])
         return ([r/1000.0 for r in ranges], [10.0]*len(ranges))
 
     def resend_last_motor_command(self):
@@ -270,18 +267,18 @@ class xv11():
     def getMotors(self):
         """ Update values for motors in the self.state dictionary.
             Returns current left, right encoder values. """
-        if b'motors' in self.sensor_dict:
+        if 'motors' in self.sensor_dict:
             self.state["LeftWheel_PositionInMM"],self.state["RightWheel_PositionInMM"] = \
-                    struct.unpack('<2d', self.sensor_dict[b'motors'])
+                    struct.unpack('<2d', self.sensor_dict['motors'])
             return [self.state["LeftWheel_PositionInMM"],self.state["RightWheel_PositionInMM"]]
         return None
 
     def getAccel(self):
         """ Update values for motors in the self.state dictionary.
             Returns current left, right encoder values. """
-        if b'accel' in self.sensor_dict:
+        if 'accel' in self.sensor_dict:
             self.state["PitchInDegrees"], self.state["RollInDegrees"], self.state["XInG"], self.state["YInG"], self.state["ZInG"], self.state["SumInG"] =\
-                struct.unpack('<6f', self.sensor_dict[b'accel'])
+                struct.unpack('<6f', self.sensor_dict['accel'])
             return [self.state["PitchInDegrees"],
                     self.state["RollInDegrees"],
                     self.state["XInG"],
@@ -294,9 +291,9 @@ class xv11():
         """ Update values for digital sensors in the self.state dictionary. """
         #self.port.send("getdigitalsensors\r\n")
         # for now we will let the raspberry pi request the digital sensors by itself
-        if b'digitalsensors' in self.sensor_dict:
+        if 'digitalsensors' in self.sensor_dict:
             self.state['LFRONTBIT'],self.state['LSIDEBIT'],self.state['RFRONTBIT'],self.state['RSIDEBIT'] =\
-                struct.unpack('<4d', self.sensor_dict[b'digitalsensors'])
+                struct.unpack('<4d', self.sensor_dict['digitalsensors'])
 
             return [self.state['LFRONTBIT'],self.state['LSIDEBIT'],self.state['RFRONTBIT'],self.state['RSIDEBIT']]
         return None

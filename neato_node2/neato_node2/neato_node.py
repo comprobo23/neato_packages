@@ -86,7 +86,7 @@ class NeatoNode(Node):
         self.total_dth = 0.0
 
     def main_run_loop(self):
-        if time.time() - self.last_keep_alive > 30.0:
+        if time.time() - self.last_keep_alive > 10.0:
             self.robot.send_keep_alive()
             self.last_keep_alive = time.time()
         self.robot.requestScan()
