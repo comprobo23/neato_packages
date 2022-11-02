@@ -19,7 +19,7 @@ class SetupUDPStream(Node):
                 ('host', ""),
             ]
         )
-        self.video_mode = "-ex sports -awb off -mm matrix -w " + str(width.value) + " -h " + str(height.value) + " -fps " + str(fps.value) + " -b 2000000"
+        self.video_mode = "-ex sports -mm matrix -w " + str(width.value) + " -h " + str(height.value) + " -fps " + str(fps.value) + " -b 2000000"
 
 
 def main(args=None):
