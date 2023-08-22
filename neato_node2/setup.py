@@ -11,6 +11,7 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['launch/bringup_minimal.py']),
         ('share/' + package_name, ['launch/bringup.py']),
+        ('share/' + package_name, ['launch/bringup_multi.py']),
         ('share/' + package_name, ['package.xml']),
     ],
     install_requires=['setuptools'],
