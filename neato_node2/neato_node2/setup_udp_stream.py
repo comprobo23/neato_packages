@@ -19,7 +19,7 @@ class SetupUDPStream(Node):
                 ('host', ""),
             ]
         )
-        self.video_mode = "-ex sports -mm matrix -w " + str(width.value) + " -h " + str(height.value) + " -fps " + str(fps.value) + " -b 2000000"
+        self.video_mode = "--mode 768:432 --exposure sport --width 768 --height 432 --framerate 60"
 
 
 def main(args=None):
