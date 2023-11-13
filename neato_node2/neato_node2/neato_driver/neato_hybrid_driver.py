@@ -205,8 +205,7 @@ class xv11():
 
     def send_protocol_preference(self):
         """ Tell the server whether or not to use UDP for sensor packets """
-
-        self.port.send(("protocolpreference " + str(self.use_udp) + ' 7777 True\n').encode())
+        self.port.send(("protocolpreference " + str(self.use_udp) + ' ' + str(self.udp_port) + ' True\n').encode())
         print("SETTING PROTOCOL to udp", self.use_udp)
 
     def send_keep_alive(self):
