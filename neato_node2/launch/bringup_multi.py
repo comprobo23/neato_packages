@@ -1,7 +1,7 @@
 """
 Sample invocation:
 
-ros2 launch neato_node2 bringup_multi.py host:=192.168.16.59 robot_name:=a udp_video_port:=5002 udp_sensor_port:=7777 gscam_config:='udpsrc port=5002 ! application/x-rtp, payload=96 ! rtpjitterbuffer ! rtph264depay ! avdec_h264  ! videoconvert'
+ros2 launch neato_node2 bringup_multi.py host:=192.168.16.59 robot_name:=a udp_video_port:=5002 udp_sensor_port:=7777'
 """
 
 from ament_index_python.packages import get_package_share_directory
@@ -16,8 +16,13 @@ import os
 def generate_launch_description():
     use_udp = DeclareLaunchArgument('use_udp', default_value="true")
     host = DeclareLaunchArgument('host', default_value="")
-    gscam_config = DeclareLaunchArgument('gscam_config', default_value='udpsrc port=5002 ! application/x-rtp, payload=96 ! rtpjitterbuffer ! rtph264depay ! avdec_h264  ! videoconvert')
-    udp_video_port = DeclareLaunchArgument('udp_video_port', default_value="5002")
+
+    udp_video_port = LaunchConfiguration('udp_video_port')
+    udp_video_port_command = DeclareLaunchArgument('udp_video_port', default_value="5002")
+    gscam_config = DeclareLaunchArgument('gscam_config', default_value=['udpsrc port=',
+                                                                        udp_video_port,
+                                                                        ' ! application/x-rtp, payload=96 ! rtpjitterbuffer ! rtph264depay ! avdec_h264  ! videoconvert'])
+
     udp_sensor_port = DeclareLaunchArgument('udp_sensor_port', default_value="7777")
     robot_name = LaunchConfiguration('robot_name')
     robot_name_command = DeclareLaunchArgument('robot_name', default_value='')
@@ -26,8 +31,9 @@ def generate_launch_description():
     return LaunchDescription([
         use_udp,
         host,
+        udp_sensor_port,
+        udp_video_port_command,
         gscam_config,
-        udp_video_port,
         robot_name_command,
         GroupAction(actions=[PushRosNamespace(namespace=robot_name),
            Node(
@@ -54,7 +60,7 @@ def generate_launch_description():
                 package='neato_node2',
                 executable='setup_udp_stream',
                 name='udp_stream_setup',
-                parameters=[{"receive_port": LaunchConfiguration('udp_video_port')},
+                parameters=[{"receive_port": udp_video_port},
                             {"width": 1024},
                             {"height": 768},
                             {"fps": 30},
