@@ -148,12 +148,12 @@ class NeatoNode(Node):
                 self.odom.pose.pose.position.y = self.y
                 self.odom.pose.pose.position.z = 0.0
                 self.odom.pose.pose.orientation = quaternion
-                self.odom.pose.covariance = np.array([10**-1, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                             0.0, 10**-1, 0.0, 0.0, 0.0, 0.0,
-                                             0.0, 0.0, 10**-1, 0.0, 0.0, 0.0,
-                                             0.0, 0.0, 0.0, 10**5, 0.0, 0.0,
-                                             0.0, 0.0, 0.0, 0, 10**5, 0.0,
-                                             0.0, 0.0, 0.0, 0.0, 0.0, 10**5], dtype=np.float64)
+                self.odom.pose.covariance = np.array([10**-4, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                             0.0, 10**-4, 0.0, 0.0, 0.0, 0.0,
+                                             0.0, 0.0, 10**-4, 0.0, 0.0, 0.0,
+                                             0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
+                                             0.0, 0.0, 0.0, 0, 0.1, 0.0,
+                                             0.0, 0.0, 0.0, 0.0, 0.0, 0.1], dtype=np.float64)
                 self.odom.twist.twist.linear.x = dx/dt
                 self.odom.twist.twist.angular.z = dth/dt
                 transform = TransformStamped()
