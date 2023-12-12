@@ -65,6 +65,7 @@ class NeatoNode(Node):
         scan.angle_increment = pi/180.0
         scan.range_min = 0.020
         scan.range_max = 5.0
+        scan.scan_time = 0.2
         scan.time_increment = 1.0/(5*360)
         self.scan = scan
         self.odom = Odometry()
@@ -105,6 +106,10 @@ class NeatoNode(Node):
             else:
                 self.old_ranges = copy(self.scan.ranges)
 
+        # TODO: do this better
+        for i in range(len(self.scan.ranges)):
+            if self.scan.ranges[i] == 0:
+                self.scan.ranges[i] = float('inf')
         if delta_t-0.2 > 0.1:
             self.get_logger().warn("Iteration took longer than expected (should be 0.2) %f" % (delta_t))
 
@@ -148,14 +153,21 @@ class NeatoNode(Node):
                 self.odom.pose.pose.position.y = self.y
                 self.odom.pose.pose.position.z = 0.0
                 self.odom.pose.pose.orientation = quaternion
-                self.odom.pose.covariance = np.array([10**-1, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                             0.0, 10**-1, 0.0, 0.0, 0.0, 0.0,
-                                             0.0, 0.0, 10**-1, 0.0, 0.0, 0.0,
-                                             0.0, 0.0, 0.0, 10**5, 0.0, 0.0,
-                                             0.0, 0.0, 0.0, 0, 10**5, 0.0,
-                                             0.0, 0.0, 0.0, 0.0, 0.0, 10**5], dtype=np.float64)
+                # copying these from the iRobot create
+                self.odom.pose.covariance = np.array([10**-3, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                             0.0, 10**-3, 0.0, 0.0, 0.0, 0.0,
+                                             0.0, 0.0, 10**-3, 0.0, 0.0, 0.0,
+                                             0.0, 0.0, 0.0, 10**-3, 0.0, 0.0,
+                                             0.0, 0.0, 0.0, 0, 10**-3, 0.0,
+                                             0.0, 0.0, 0.0, 0.0, 0.0, 10**-2], dtype=np.float64)
                 self.odom.twist.twist.linear.x = dx/dt
                 self.odom.twist.twist.angular.z = dth/dt
+                self.odom.twist.covariance = np.array([10**-3, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                             0.0, 10**-3, 0.0, 0.0, 0.0, 0.0,
+                                             0.0, 0.0, 10**-3, 0.0, 0.0, 0.0,
+                                             0.0, 0.0, 0.0, 10**-3, 0.0, 0.0,
+                                             0.0, 0.0, 0.0, 0, 10**-3, 0.0,
+                                             0.0, 0.0, 0.0, 0.0, 0.0, 10**-2], dtype=np.float64)
                 transform = TransformStamped()
                 transform.header.stamp = curr_motor_time.to_msg()
                 transform.header.frame_id = self.tf_prefix + 'odom'
